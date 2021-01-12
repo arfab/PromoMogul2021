@@ -38,7 +38,7 @@ namespace PromoDH
 
             services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
 
-           // services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 
 

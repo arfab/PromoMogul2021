@@ -1,65 +1,85 @@
 $(document).ready(function () {
-  // --------------------------------------------------------------------------------------
-	// GENERAL ------------------------------------------------------------------------------
-	var $window = $(window);
 
-	$window.on('scroll', function() {
-    if ($window.scrollTop() > 50) {
-      $("body").addClass("scrolled");
-    } else {
-      $("body").removeClass("scrolled");
-    }
-	}).trigger("scroll");
-	
-	// MENU
-  $(".menu-open").on('click', function() {
+  // CIERRE
+  // $.fancybox.open({
+  //   src: 'cierre.html',
+  //   type: 'iframe',
+  //   toolbar: false,
+  //   smallBtn: true,
+  //   opts: {
+  //     iframe: {
+  //       preload: false,
+  //       css: {
+  //         width: '500px',
+  //       }
+  //     }
+  //   }
+  // });
+
+  // MENU
+  $(".open-menu").click(function () {
     $("html").toggleClass("menu-open");
     return false;
   });
 
-  $("#menu .menu-close, #menu-blocker").on('click', function() {
+  $("#menu .menu-close, #menu-blocker").click(function () {
     $("html").removeClass("menu-open");
     return false;
   });
-  
-  if ($("body").is("#hom")) {
 
-      // TOLDO
-      $(".toldo").prepend("<div class='guir guir-l'></div><div class='guir guir-r'></div>");
+  $("#menu .video").click(function () {
+    $("html").removeClass("menu-open");
+  });
+
+  $("#menu .sel span").prepend("<img src='images/menusel.png' />");
+
+  if ($('body').is('#hom')) {
+
+    var $window = $(window);
+
+    $window.on('resize',function () {
+      var imgRatio = 1.4;
+      if ($window.width() >= 600) {
+        imgRatio = 0.58;
+      }
+      $(".intro").height($(".intro").width() * imgRatio);
+
+    }).trigger("resize");
+
 
     function onSlide1() {
-      $(".slide1 p, .slide1 span, .slide1 div").css({"opacity": 0});
-      $(".slide1 p").animate({"opacity": 1}, 150);
-      $(".slide1 span").delay(250).animate({"opacity": 1}, 150);
-      $(".slide1 div").delay(450).animate({"opacity": 1}, 150);
+      $(".slide img").css({"opacity": 0});
+      $(".slide1 .tit").delay(150).animate({"opacity": 1}, 150);
+      $(".slide1 .img").delay(350).animate({"opacity": 1}, 150);
+      $(".slide1 .txt").delay(550).animate({"opacity": 1}, 150);
     }
 
     function onSlide2() {
-      $(".slide2 p, .slide2 img, .slide2 div").css({"opacity": 0});
-      $(".slide2 div").delay(450).animate({"opacity": 1}, 150);
-      $(".slide2 p").animate({"opacity": 1}, 150);
-      $(".slide2 img").each(function(index) {
-			  $(".slide2 .img"+(index+1)+"").delay(150*index).animate({"opacity": 1}, 250);
-		  });
+      $(".slide img").css({"opacity": 0});
+      $(".slide2 .tit").delay(150).animate({"opacity": 1}, 150);
+      $(".slide2 .img").delay(350).animate({"opacity": 1}, 150);
+      $(".slide2 .txt").delay(550).animate({"opacity": 1}, 150);
     }
 
-		$(".anim .owl-carousel").owlCarousel({
+		$(".intro.owl-carousel").owlCarousel({
 			loop: true,
       margin: 0,
-      mouseDrag: true,
+      mouseDrag: false,
       touchDrag: false,
-      autoplay: false,
+      autoplay: true,
       animateOut: 'fadeOut',
-			autoplayTimeout: 5000,
+			autoplayTimeout: 6000,
 			autoplaySpeed: 0,
-			autoplayHoverPause: false,
+      autoplayHoverPause: false,
+      pagination: false,
+      navigation: false,
 			items: 1,
 		}).on('changed.owl.carousel', function(event) {
       switch (event.item.index) {
         case 3:
           onSlide2();
           break;
-        case 4:
+        case 2:
           onSlide1();
           break;
       }
@@ -67,55 +87,23 @@ $(document).ready(function () {
 
     onSlide1();
 
-		$("main .owl-carousel").owlCarousel({
-			loop: true,
-			margin: 0,
-			autoplay: true,
-			slideTransition: "linear",
-			autoplayTimeout: 0,
-			autoplaySpeed: 3000,
-			autoplayHoverPause: false,
-			responsive: {
-				0: { items: 3 },
-				450: { items: 4 },
-				600: { items: 5 },
-				750: { items: 6 },
-				900: { items: 8 },
-			},
-    });
-    
-	} else {
+  } else {
 
-    if($("main").hasClass("conElems")) {
-      $("main").prepend("<div class='elems'></div>");
-      var nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-      shuffle(nums);
-      $.each(nums, function(i) {
-        $(".elems").append("<img src='/images/elem-"+(i+1)+".png' class='pos"+nums[i]+"' />");
-      })
-    }
+    // NANO SCROLLER (Delay para que renderice con el alto correcto)
+    if($(".nano").length) {
+      setTimeout(function() {
+        $(".nano").nanoScroller({ alwaysVisible: true });
+      }, 150)
+    };
 
-    $(".nano").nanoScroller({ alwaysVisible: true });
+    setTimeout(
+      function() {
+        if(!$(".nano-pane").is(':visible')) {
+          $(".nano .nano-content").css({"padding-right": 0, "right": 0});
+        }
+      }, 200);
+
   }
 
 });
 
-
-function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-}
